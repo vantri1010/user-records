@@ -2,14 +2,14 @@
 pragma solidity ^0.8.15;
 
 contract Employee {
-    struct UserStruct {
+    struct User {
         bytes32 userEmail;
         uint256 userTime;
         uint256 index;
     }
 
-    mapping(address => UserStruct) private userStructs;
-    address[] private userIndex;
+    mapping(address => User) public listUsers;
+    address[] public userIndex;
 
     event LogNewUser(
         address indexed userAddress,
@@ -27,7 +27,7 @@ contract Employee {
 
     function isUser(address userAddress) public view returns (bool isIndeed) {
         require(userIndex.length != 0, "List user address is empty !");
-        return (userIndex[userStructs[userAddress].index] == userAddress);
+        return (userIndex[listUsers[userAddress].index] == userAddress);
     }
 
     function insertUser(
@@ -36,12 +36,12 @@ contract Employee {
         uint256 userTime
     ) public returns (uint256 index) {
         userIndex.push(userAddress);
-        userStructs[userAddress].userEmail = userEmail;
-        userStructs[userAddress].userTime = userTime;
-        userStructs[userAddress].index = userIndex.length - 1;
+        listUsers[userAddress].userEmail = userEmail;
+        listUsers[userAddress].userTime = userTime;
+        listUsers[userAddress].index = userIndex.length - 1;
         emit LogNewUser(
             userAddress,
-            userStructs[userAddress].index,
+            listUsers[userAddress].index,
             userEmail,
             userTime
         );
@@ -50,64 +50,64 @@ contract Employee {
 
     function deleteUser(address userAddress) public returns (uint256 index) {
         require(isUser(userAddress), "User not found !");
-        uint256 rowToDelete = userStructs[userAddress].index;
+        uint256 rowToDelete = listUsers[userAddress].index;
         address lastKey = userIndex[userIndex.length - 1];
         userIndex[rowToDelete] = lastKey;
-        userStructs[userAddress] = userStructs[lastKey];
-        delete userStructs[lastKey];
+        listUsers[userAddress] = listUsers[lastKey];
+        delete listUsers[lastKey];
         userIndex.pop();
         emit LogDeleteUser(userAddress, rowToDelete);
         emit LogUpdateUser(
             lastKey,
             rowToDelete,
-            userStructs[lastKey].userEmail,
-            userStructs[lastKey].userTime
+            listUsers[lastKey].userEmail,
+            listUsers[lastKey].userTime
         );
         return rowToDelete;
     }
 
     function getUser(address userAddress)
-        public
-        view
-        returns (
-            bytes32 userEmail,
-            uint256 userTime,
-            uint256 index
-        )
+    public
+    view
+    returns (
+        bytes32 userEmail,
+        uint256 userTime,
+        uint256 index
+    )
     {
         require(isUser(userAddress), "User not found !");
         return (
-            userStructs[userAddress].userEmail,
-            userStructs[userAddress].userTime,
-            userStructs[userAddress].index
+            listUsers[userAddress].userEmail,
+            listUsers[userAddress].userTime,
+            listUsers[userAddress].index
         );
     }
 
     function updateUserEmail(address userAddress, bytes32 userEmail)
-        public
-        returns (bool success)
+    public
+    returns (bool success)
     {
         require(isUser(userAddress), "User not found !");
-        userStructs[userAddress].userEmail = userEmail;
+        listUsers[userAddress].userEmail = userEmail;
         emit LogUpdateUser(
             userAddress,
-            userStructs[userAddress].index,
+            listUsers[userAddress].index,
             userEmail,
-            userStructs[userAddress].userTime
+            listUsers[userAddress].userTime
         );
         return true;
     }
 
     function updateUserTime(address userAddress, uint256 userTime)
-        public
-        returns (bool success)
+    public
+    returns (bool success)
     {
         require(isUser(userAddress), "User not found !");
-        userStructs[userAddress].userTime = userTime;
+        listUsers[userAddress].userTime = userTime;
         emit LogUpdateUser(
             userAddress,
-            userStructs[userAddress].index,
-            userStructs[userAddress].userEmail,
+            listUsers[userAddress].index,
+            listUsers[userAddress].userEmail,
             userTime
         );
         return true;
@@ -118,21 +118,22 @@ contract Employee {
     }
 
     function getUserAtIndex(uint256 index)
-        public
-        view
-        returns (address userAddress)
+    public
+    view
+    returns (address userAddress)
     {
         return userIndex[index];
     }
 
-    function getAllUsers() public view returns (UserStruct[] memory, address[] memory)
+    function getAllUsers() public view returns (User[] memory)
     {
-      UserStruct[] memory allUsers = new UserStruct[](userIndex.length);
-      for (uint i = 0; i < userIndex.length; i++) 
-      {
-        allUsers[i] = userStructs[userIndex[i]];
-      }
+        require(userIndex.length > 0, "List of users is empty !!");
+        User[] memory allUsers = new User[](userIndex.length);
+        for (uint i = 0; i < userIndex.length; i++)
+        {
+            allUsers[i] = listUsers[userIndex[i]];
+        }
 
-      return (allUsers, userIndex);
+        return allUsers;
     }
 }
