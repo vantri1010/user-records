@@ -18,7 +18,7 @@ func NewRecord(repo Record) *RecordBiz {
 }
 
 func (biz *RecordBiz) CreateRecord(ctx context.Context, data *model.Employee) error {
-	if err := biz.repo.CreateRecord(ctx, data); err != nil {
+	if err := biz.repo.Create(ctx, data); err != nil {
 		return err
 	}
 
