@@ -3,9 +3,12 @@ package main
 import (
 	"fmt"
 	"github.com/ethereum/go-ethereum/common"
+	"github.com/gin-gonic/gin"
 	"log"
 	"math/big"
+	"net/http"
 	"user-records/contractCtl"
+	"user-records/gin-client/routers"
 )
 
 func main() {
@@ -56,17 +59,17 @@ func main() {
 
 	_ = txOpts
 
-	//router := gin.Default()
-	//router.Use(gin.Recovery())
-	//
-	//router.GET("/ping", func(c *gin.Context) {
-	//	c.JSON(http.StatusOK, gin.H{
-	//		"message": "pong",
-	//	})
-	//})
-	//
-	//router.POST("/create")
-	//
-	//router.Run()
+	router := gin.Default()
+	router.Use(gin.Recovery())
+
+	router.GET("/ping", func(c *gin.Context) {
+		c.JSON(http.StatusOK, gin.H{
+			"message": "pong",
+		})
+	})
+
+	router.POST("/create", routers.CreateRecord(contractInstance))
+
+	router.Run()
 
 }

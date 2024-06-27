@@ -2,11 +2,11 @@ package biz
 
 import (
 	"context"
-	"user-records/gin-client/model"
+	"user-records/api"
 )
 
 type Record interface {
-	CreateRecord(context context.Context, data *model.Employee) error
+	Create(context context.Context, data *api.EmployeeUser) error
 }
 
 type RecordBiz struct {
@@ -17,7 +17,7 @@ func NewRecord(repo Record) *RecordBiz {
 	return &RecordBiz{repo: repo}
 }
 
-func (biz *RecordBiz) CreateRecord(ctx context.Context, data *model.Employee) error {
+func (biz *RecordBiz) CreateRecord(ctx context.Context, data *api.EmployeeUser) error {
 	if err := biz.repo.Create(ctx, data); err != nil {
 		return err
 	}

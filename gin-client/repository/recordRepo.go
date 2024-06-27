@@ -29,7 +29,7 @@ func genKey() common.Address {
 	return common.Address(addressBytes)
 }
 
-func (repo *RecordsRepository) Create(ctx context.Context, data api.EmployeeUser) error {
+func (repo *RecordsRepository) Create(ctx context.Context, data *api.EmployeeUser) error {
 	tran, err := repo.caller.InsertUser(&bind.TransactOpts{}, genKey(), data.UserEmail, data.UserTime)
 	if err != nil {
 		return err

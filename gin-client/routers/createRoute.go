@@ -21,8 +21,13 @@ func CreateRecord(conn *api.Api) gin.HandlerFunc {
 			panic(err)
 		}
 
-		repo := repository.NewRecordRepo()
-		record := biz.NewRecord()
+		repo := repository.NewRecordRepo(conn)
+		record := biz.NewRecord(repo)
+
+		err = record.CreateRecord(c.Request.Context(), solData)
+		if err != nil {
+			panic(err)
+		}
 
 	}
 }
