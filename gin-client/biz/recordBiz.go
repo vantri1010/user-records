@@ -2,11 +2,12 @@ package biz
 
 import (
 	"context"
+	"github.com/ethereum/go-ethereum/accounts/abi/bind"
 	"user-records/api"
 )
 
 type Record interface {
-	Create(context context.Context, data *api.EmployeeUser) error
+	Create(context context.Context, txOpts *bind.TransactOpts, data *api.EmployeeUser) error
 }
 
 type RecordBiz struct {
@@ -17,8 +18,8 @@ func NewRecord(repo Record) *RecordBiz {
 	return &RecordBiz{repo: repo}
 }
 
-func (biz *RecordBiz) CreateRecord(ctx context.Context, data *api.EmployeeUser) error {
-	if err := biz.repo.Create(ctx, data); err != nil {
+func (biz *RecordBiz) CreateRecord(ctx context.Context, txOpts *bind.TransactOpts, data *api.EmployeeUser) error {
+	if err := biz.repo.Create(ctx, txOpts, data); err != nil {
 		return err
 	}
 

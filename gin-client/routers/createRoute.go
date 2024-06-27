@@ -1,6 +1,7 @@
 package routers
 
 import (
+	"github.com/ethereum/go-ethereum/accounts/abi/bind"
 	"github.com/gin-gonic/gin"
 	"user-records/api"
 	"user-records/gin-client/biz"
@@ -8,7 +9,7 @@ import (
 	"user-records/gin-client/repository"
 )
 
-func CreateRecord(conn *api.Api) gin.HandlerFunc {
+func CreateRecord(conn *api.Api, txOpts *bind.TransactOpts) gin.HandlerFunc {
 	return func(c *gin.Context) {
 		var data model.Employee
 
@@ -24,7 +25,7 @@ func CreateRecord(conn *api.Api) gin.HandlerFunc {
 		repo := repository.NewRecordRepo(conn)
 		record := biz.NewRecord(repo)
 
-		err = record.CreateRecord(c.Request.Context(), solData)
+		err = record.CreateRecord(c.Request.Context(), txOpts, solData)
 		if err != nil {
 			panic(err)
 		}
