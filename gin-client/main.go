@@ -28,6 +28,9 @@ func main() {
 		log.Fatal(err)
 	}
 
+	options, err := contractCtl.CallOpts(txOpts.From)
+	_ = options
+
 	// Get record inserted below at index 0
 	var index, _ = new(big.Int).SetString("1", 10)
 

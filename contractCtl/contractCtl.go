@@ -67,6 +67,7 @@ func TxOps(client *ethclient.Client, privateKey *ecdsa.PrivateKey, value int64) 
 	auth.Value = big.NewInt(value)  // in wei
 	auth.GasLimit = uint64(3000000) // in units
 	auth.GasPrice = gasPrice
+	auth.From = addr
 	return auth, nil
 }
 
@@ -91,10 +92,23 @@ func Load(client *ethclient.Client) (*contracts.Api, error) {
 	if err != nil {
 		log.Fatal(err)
 	}
-	owner, err := contractInstance.GetUserCount(nil)
+
+	// Test get user count from *api
+	total, err := contractInstance.GetUserCount(nil)
 	if err != nil {
 		return nil, err
 	}
-	fmt.Printf("Contract owner: %x\n", owner)
+	fmt.Printf("Total user (load contract test): %x\n", total)
+
 	return contractInstance, nil
+}
+
+func CallOpts(address common.Address) (*bind.CallOpts, error) {
+	callOpts := &bind.CallOpts{
+		Pending: false,
+		From:    address,
+		Context: context.Background(),
+	}
+
+	return callOpts, nil
 }

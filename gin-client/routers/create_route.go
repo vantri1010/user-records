@@ -23,9 +23,9 @@ func CreateRecord(conn *api.Api, txOpts *bind.TransactOpts) gin.HandlerFunc {
 		}
 
 		repo := repository.NewRecordRepo(conn)
-		record := biz.NewRecord(repo)
+		createRcBiz := biz.NewCreateBiz(repo)
 
-		err = record.CreateRecord(c.Request.Context(), txOpts, solData)
+		err = createRcBiz.CreateRecord(c.Request.Context(), txOpts, solData)
 		if err != nil {
 			panic(err)
 		}
