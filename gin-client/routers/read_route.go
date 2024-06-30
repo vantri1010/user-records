@@ -21,7 +21,7 @@ func ReadRecord(conn *api.Api, opts *bind.CallOpts, addr common.Address) gin.Han
 			panic(err)
 		}
 
-		data, _ := model.MapSolDataToEmployee(&result)
+		data, _ := model.MapSolDataToEmployee(result)
 
 		c.JSON(http.StatusOK, data)
 
