@@ -9,7 +9,7 @@ import (
 
 type CreateRepo interface {
 	Create(context context.Context, txOpts *bind.TransactOpts, data *api.EmployeeUser) error
-	Read(ctx context.Context, opts *bind.CallOpts, addr common.Address) (*api.EmployeeUser, error)
+	Read(ctx context.Context, opts *bind.CallOpts, addr common.Address) (api.EmployeeUser, error)
 }
 
 type CreateBiz struct {
@@ -28,10 +28,10 @@ func (biz *CreateBiz) CreateRecord(ctx context.Context, txOpts *bind.TransactOpt
 	return nil
 }
 
-func (biz *CreateBiz) ReadRecord(ctx context.Context, opts *bind.CallOpts, addr common.Address) (*api.EmployeeUser, error) {
+func (biz *CreateBiz) ReadRecord(ctx context.Context, opts *bind.CallOpts, addr common.Address) (api.EmployeeUser, error) {
 	user, err := biz.repo.Read(ctx, opts, addr)
 	if err != nil {
-		return &api.EmployeeUser{}, err
+		return user, err
 	}
 	return user, nil
 }

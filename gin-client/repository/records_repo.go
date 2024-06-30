@@ -39,8 +39,8 @@ func (repo *RecordsRepository) Create(ctx context.Context, txOpts *bind.Transact
 	return nil
 }
 
-func (repo *RecordsRepository) Read(ctx context.Context, opts *bind.CallOpts, addr common.Address) (*api.EmployeeUser, error) {
+func (repo *RecordsRepository) Read(ctx context.Context, opts *bind.CallOpts, addr common.Address) (api.EmployeeUser, error) {
 	user, err := repo.caller.GetUser(opts, addr)
 	log.Println("user value return: ", user)
-	return (*api.EmployeeUser)(&user), err
+	return user, err
 }

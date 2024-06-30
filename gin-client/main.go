@@ -29,7 +29,6 @@ func main() {
 	}
 
 	options, err := contractCtl.CallOpts(txOpts.From)
-	_ = options
 
 	// Get record inserted below at index 0
 	var index, _ = new(big.Int).SetString("1", 10)
@@ -50,6 +49,7 @@ func main() {
 	})
 
 	router.POST("/create", routers.CreateRecord(contractInstance, txOpts))
+	router.GET("/read", routers.ReadRecord(contractInstance, options, txHash))
 
 	router.Run()
 

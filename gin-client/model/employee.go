@@ -14,7 +14,7 @@ type Employee struct {
 }
 
 type EmployeeRead struct {
-	UserEmail string    `json:"user_email" validate:"required"`
+	UserEmail string    `json:"user_email,omitempty"`
 	UserTime  time.Time `json:"user_time,omitempty"`
 	Index     *big.Int  `json:"index,omitempty"`
 }
