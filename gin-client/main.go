@@ -49,7 +49,7 @@ func main() {
 	})
 
 	router.POST("/create", routers.CreateRecord(contractInstance, txOpts))
-	router.GET("/read", routers.ReadRecord(contractInstance, options, txHash))
+	router.GET("/read/:address", routers.ReadRecord(contractInstance, options))
 
 	router.Run()
 

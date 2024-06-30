@@ -11,12 +11,15 @@ import (
 	"user-records/gin-client/repository"
 )
 
-func ReadRecord(conn *api.Api, opts *bind.CallOpts, addr common.Address) gin.HandlerFunc {
+func ReadRecord(conn *api.Api, opts *bind.CallOpts) gin.HandlerFunc {
 	return func(c *gin.Context) {
+		addrString := c.Params.ByName("address")
+		hexAddr := common.HexToAddress(addrString)
+
 		repo := repository.NewRecordRepo(conn)
 		recordBiz := biz.NewCreateBiz(repo)
 
-		result, err := recordBiz.ReadRecord(c.Request.Context(), opts, addr)
+		result, err := recordBiz.ReadRecord(c.Request.Context(), opts, hexAddr)
 		if err != nil {
 			panic(err)
 		}
@@ -24,6 +27,5 @@ func ReadRecord(conn *api.Api, opts *bind.CallOpts, addr common.Address) gin.Han
 		data, _ := model.MapSolDataToEmployee(result)
 
 		c.JSON(http.StatusOK, data)
-
 	}
 }
