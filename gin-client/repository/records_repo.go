@@ -6,6 +6,7 @@ import (
 	"github.com/ethereum/go-ethereum/accounts/abi/bind"
 	"github.com/ethereum/go-ethereum/common"
 	"log"
+	"math/big"
 	"user-records/api"
 )
 
@@ -39,11 +40,13 @@ func (repo *RecordsRepository) Create(ctx context.Context, txOpts *bind.Transact
 	return nil
 }
 
-func (repo *RecordsRepository) Read(ctx context.Context, opts *bind.CallOpts, addr common.Address) (*api.EmployeeUser, error) {
+func (repo *RecordsRepository) GetUserByAddr(ctx context.Context, opts *bind.CallOpts, addr common.Address) (*api.EmployeeUser, error) {
 	var user api.EmployeeUser
-	user, err := repo.caller.GetUser(opts, addr)
-	if err != nil {
-		return nil, err
-	}
-	return &user, nil
+	user, err := repo.caller.ListUsers(opts, addr)
+	return &user, err
+}
+
+func (repo *RecordsRepository) GetAddrByIndex(ctx context.Context, opts *bind.CallOpts, index *big.Int) (*common.Address, error) {
+	addr, err := repo.caller.UserIndex(opts, index)
+	return &addr, err
 }

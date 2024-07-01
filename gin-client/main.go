@@ -1,10 +1,8 @@
 package main
 
 import (
-	"fmt"
 	"github.com/gin-gonic/gin"
 	"log"
-	"math/big"
 	"net/http"
 	"user-records/contractCtl"
 	"user-records/gin-client/routers"
@@ -30,15 +28,6 @@ func main() {
 
 	options, err := contractCtl.CallOpts(txOpts.From)
 
-	// Get record inserted below at index 0
-	var index, _ = new(big.Int).SetString("1", 10)
-
-	txHash, err := contractInstance.GetUserAtIndex(nil, index)
-	if err != nil {
-		log.Fatal(err)
-	}
-	fmt.Printf("Tx Hash: %x\n", txHash)
-
 	router := gin.Default()
 	router.Use(gin.Recovery())
 
@@ -50,6 +39,7 @@ func main() {
 
 	router.POST("/create", routers.CreateRecord(contractInstance, txOpts))
 	router.GET("/read/:address", routers.ReadRecord(contractInstance, options))
+	router.GET("/getaddress/:index", routers.GetAddress(contractInstance, options))
 
 	router.Run()
 
