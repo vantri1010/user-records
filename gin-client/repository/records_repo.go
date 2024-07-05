@@ -37,18 +37,18 @@ func (repo *RecordsRepository) Create(ctx context.Context, txOpts *bind.Transact
 		return err
 	}
 
-	log.Println("tran value: ", tran.Value())
+	log.Println("tran value: ", tran.Data())
 	return nil
 }
 
 func (repo *RecordsRepository) GetUserByAddr(ctx context.Context, opts *bind.CallOpts, addr common.Address) (*api.EmployeeUser, error) {
 	var user api.EmployeeUser
-	user, err := repo.caller.ListUsers(opts, addr)
+	user, err := repo.caller.GetUser(opts, addr)
 	return &user, err
 }
 
 func (repo *RecordsRepository) GetAddrByIndex(ctx context.Context, opts *bind.CallOpts, index *big.Int) (*common.Address, error) {
-	addr, err := repo.caller.UserIndex(opts, index)
+	addr, err := repo.caller.GetUserAtIndex(opts, index)
 	return &addr, err
 }
 

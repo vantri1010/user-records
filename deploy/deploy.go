@@ -16,8 +16,9 @@ func main() {
 	if err != nil {
 		log.Fatal(err)
 	}
-	_ = contractInstance
+
 	_ = ca
+	_ = contractInstance
 	_ = txa
 
 }

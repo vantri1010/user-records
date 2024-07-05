@@ -48,20 +48,19 @@ contract Employee {
         return userIndex.length - 1;
     }
 
-    function deleteUser(address userAddress) public returns (uint256 index) {
-        require(isUser(userAddress), "User not found !");
-        uint256 rowToDelete = listUsers[userAddress].index;
-        address lastKey = userIndex[userIndex.length - 1];
-        userIndex[rowToDelete] = lastKey;
-        listUsers[userAddress] = listUsers[lastKey];
-        delete listUsers[lastKey];
+    function deleteUser(address deleteAddress) public returns (uint256 index) {
+        require(isUser(deleteAddress), "User not found !");
+        uint256 rowToDelete = listUsers[deleteAddress].index;
+        address lastAddrKey = userIndex[userIndex.length - 1];
+        userIndex[rowToDelete] = lastAddrKey;
+        listUsers[lastAddrKey].index = rowToDelete;
         userIndex.pop();
-        emit LogDeleteUser(userAddress, rowToDelete);
+        emit LogDeleteUser(deleteAddress, rowToDelete);
         emit LogUpdateUser(
-            lastKey,
+            lastAddrKey,
             rowToDelete,
-            listUsers[lastKey].userEmail,
-            listUsers[lastKey].userTime
+            listUsers[lastAddrKey].userEmail,
+            listUsers[lastAddrKey].userTime
         );
         return rowToDelete;
     }

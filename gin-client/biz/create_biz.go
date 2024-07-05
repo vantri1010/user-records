@@ -79,3 +79,12 @@ func (biz *CreateBiz) GetAll(ctx context.Context, opts *bind.CallOpts) ([]api.Em
 	}
 	return users, nil
 }
+
+func (biz *CreateBiz) DeleteUser(ctx context.Context, txOpts *bind.TransactOpts, userAddress common.Address) (*big.Int, error) {
+	tran, err := biz.repo.DeleteUser(txOpts, userAddress)
+	if err != nil {
+		return nil, err
+	}
+
+	return tran.Value(), nil
+}

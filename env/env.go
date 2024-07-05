@@ -13,6 +13,7 @@ type Env struct {
 
 func NewEnv() *Env {
 	env := Env{}
+	viper.SetConfigType("env")
 	viper.SetConfigFile(".env")
 
 	err := viper.ReadInConfig()

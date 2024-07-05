@@ -42,7 +42,7 @@ func main() {
 	router.GET("/getaddressbyid/:index", routers.GetAddress(contractInstance, options))
 	router.GET("/getuserbyid/:index", routers.GetUserByID(contractInstance, options))
 	router.GET("/listusers", routers.ListUsers(contractInstance, options))
+	router.DELETE("/deleteuserbyaddr/:address", routers.DeleteRecord(contractInstance, txOpts))
 
 	router.Run()
-
 }

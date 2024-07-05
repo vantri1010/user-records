@@ -4,6 +4,7 @@ import (
 	"context"
 	"crypto/ecdsa"
 	"fmt"
+	"github.com/spf13/viper"
 	"log"
 	"math/big"
 	"user-records/env"
@@ -16,17 +17,17 @@ import (
 )
 
 var (
-	Env = env.NewEnv()
+	envi = env.NewEnv()
 )
 
 func LoadChainInfo() (*ethclient.Client, *ecdsa.PrivateKey, error) {
 	//env := env.NewEnv()
-	client, err := ethclient.Dial(Env.RPC_URL)
+	client, err := ethclient.Dial(envi.RPC_URL)
 	if err != nil {
 		return nil, nil, err
 	}
 
-	privateKey, err := crypto.HexToECDSA(Env.PRIVATE_KEY)
+	privateKey, err := crypto.HexToECDSA(envi.PRIVATE_KEY)
 	if err != nil {
 		return nil, nil, err
 	}
@@ -43,10 +44,10 @@ func TxOps(client *ethclient.Client, privateKey *ecdsa.PrivateKey, value int64) 
 	addr := crypto.PubkeyToAddress(*publicKeyECDSA)
 	fmt.Printf("msg.sender: 0x%x\n", addr)
 
-	nonce, err := client.PendingNonceAt(context.Background(), addr)
-	if err != nil {
-		log.Fatal(err)
-	}
+	//nonce, err := client.PendingNonceAt(context.Background(), addr)
+	//if err != nil {
+	//	log.Fatal(err)
+	//}
 
 	gasPrice, err := client.SuggestGasPrice(context.Background())
 	if err != nil {
@@ -63,7 +64,7 @@ func TxOps(client *ethclient.Client, privateKey *ecdsa.PrivateKey, value int64) 
 		return nil, err
 	}
 
-	auth.Nonce = big.NewInt(int64(nonce))
+	//auth.Nonce = big.NewInt(int64(nonce))
 	auth.Value = big.NewInt(value)  // in wei
 	auth.GasLimit = uint64(3000000) // in units
 	auth.GasPrice = gasPrice
@@ -82,12 +83,19 @@ func Deploy(client *ethclient.Client, privateKey *ecdsa.PrivateKey) (*contracts.
 	if err != nil {
 		return nil, common.HexToAddress("0x0"), common.HexToHash("0x0"), err
 	}
+
+	viper.Set("CONTRACT_ADDRESS", addr.String())
+	err = viper.WriteConfig()
+	if err != nil {
+		fmt.Printf("Error writing .env file: %v\n", err)
+	}
+
 	fmt.Printf("Deployed CA: %x\nTx address: %v\n", addr, tx.Hash())
 	return contract, addr, tx.Hash(), nil
 }
 
 func Load(client *ethclient.Client) (*contracts.Api, error) {
-	ca := common.HexToAddress(Env.CONTRACT_ADDRESS)
+	ca := common.HexToAddress(envi.CONTRACT_ADDRESS)
 	contractInstance, err := contracts.NewApi(ca, client)
 	if err != nil {
 		log.Fatal(err)
