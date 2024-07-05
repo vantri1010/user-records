@@ -38,8 +38,10 @@ func main() {
 	})
 
 	router.POST("/create", routers.CreateRecord(contractInstance, txOpts))
-	router.GET("/read/:address", routers.ReadRecord(contractInstance, options))
-	router.GET("/getaddress/:index", routers.GetAddress(contractInstance, options))
+	router.GET("/getuserbyaddr/:address", routers.GetUser(contractInstance, options))
+	router.GET("/getaddressbyid/:index", routers.GetAddress(contractInstance, options))
+	router.GET("/getuserbyid/:index", routers.GetUserByID(contractInstance, options))
+	router.GET("/listusers", routers.ListUsers(contractInstance, options))
 
 	router.Run()
 
