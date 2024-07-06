@@ -45,7 +45,7 @@ func GetAddress(conn *api.Api, opts *bind.CallOpts) gin.HandlerFunc {
 		repo := repository.NewRecordRepo(conn)
 		recordBiz := biz.NewCreateBiz(repo)
 
-		result, err := recordBiz.GetAddress(c.Request.Context(), opts, bigIndex)
+		result, err := recordBiz.GetAddrByID(c.Request.Context(), opts, bigIndex)
 		if err != nil {
 			c.JSON(http.StatusInternalServerError, err.Error())
 			panic(err)
@@ -98,4 +98,38 @@ func ListUsers(conn *api.Api, opts *bind.CallOpts) gin.HandlerFunc {
 		}
 		c.JSON(http.StatusOK, users)
 	}
+}
+
+func CountUsers(conn *api.Api, opts *bind.CallOpts) gin.HandlerFunc {
+	return func(c *gin.Context) {
+		repo := repository.NewRecordRepo(conn)
+		recordBiz := biz.NewCreateBiz(repo)
+
+		counts, err := recordBiz.GetCounts(c.Request.Context(), opts)
+		if err != nil {
+			c.JSON(http.StatusInternalServerError, err.Error())
+			panic(err)
+		}
+
+		c.JSON(http.StatusOK, counts)
+	}
+}
+
+func CheckAddr(conn *api.Api, opts *bind.CallOpts) gin.HandlerFunc {
+	return func(c *gin.Context) {
+		addrString := c.Params.ByName("address")
+		hexAddr := common.HexToAddress(addrString)
+
+		repo := repository.NewRecordRepo(conn)
+		recordBiz := biz.NewCreateBiz(repo)
+
+		exist, err := recordBiz.IsAddrExist(c.Request.Context(), opts, hexAddr)
+		if err != nil {
+			c.JSON(http.StatusNotFound, err.Error())
+			panic(err)
+		}
+
+		c.JSON(http.StatusFound, exist)
+	}
+
 }

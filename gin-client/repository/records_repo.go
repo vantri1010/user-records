@@ -37,7 +37,7 @@ func (repo *RecordsRepository) Create(ctx context.Context, txOpts *bind.Transact
 		return err
 	}
 
-	log.Println("tran value: ", tran.Data())
+	log.Println("tran value: ", tran)
 	return nil
 }
 
@@ -52,26 +52,26 @@ func (repo *RecordsRepository) GetAddrByIndex(ctx context.Context, opts *bind.Ca
 	return &addr, err
 }
 
-func (repo *RecordsRepository) GetAllUsers(opts *bind.CallOpts) ([]api.EmployeeUser, error) {
+func (repo *RecordsRepository) GetAllUsers(ctx context.Context, opts *bind.CallOpts) ([]api.EmployeeUser, error) {
 	return repo.caller.GetAllUsers(opts)
 }
 
-func (repo *RecordsRepository) GetUserCount(opts *bind.CallOpts) (*big.Int, error) {
+func (repo *RecordsRepository) GetUserCount(ctx context.Context, opts *bind.CallOpts) (*big.Int, error) {
 	return repo.caller.GetUserCount(opts)
 }
 
-func (repo *RecordsRepository) IsUser(opts *bind.CallOpts, userAddress common.Address) (bool, error) {
+func (repo *RecordsRepository) IsUser(ctx context.Context, opts *bind.CallOpts, userAddress common.Address) (bool, error) {
 	return repo.caller.IsUser(opts, userAddress)
 }
 
-func (repo *RecordsRepository) DeleteUser(opts *bind.TransactOpts, userAddress common.Address) (*types.Transaction, error) {
+func (repo *RecordsRepository) DeleteUser(ctx context.Context, opts *bind.TransactOpts, userAddress common.Address) (*types.Transaction, error) {
 	return repo.caller.DeleteUser(opts, userAddress)
 }
 
-func (repo *RecordsRepository) UpdateUserEmail(opts *bind.TransactOpts, userAddress common.Address, userEmail [32]byte) (*types.Transaction, error) {
+func (repo *RecordsRepository) UpdateUserEmail(ctx context.Context, opts *bind.TransactOpts, userAddress common.Address, userEmail [32]byte) (*types.Transaction, error) {
 	return repo.caller.UpdateUserEmail(opts, userAddress, userEmail)
 }
 
-func (repo *RecordsRepository) UpdateUserTime(opts *bind.TransactOpts, userAddress common.Address, userTime *big.Int) (*types.Transaction, error) {
+func (repo *RecordsRepository) UpdateUserTime(ctx context.Context, opts *bind.TransactOpts, userAddress common.Address, userTime *big.Int) (*types.Transaction, error) {
 	return repo.caller.UpdateUserTime(opts, userAddress, userTime)
 }

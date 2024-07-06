@@ -50,3 +50,33 @@ func DeleteRecord(conn *api.Api, txOpts *bind.TransactOpts) gin.HandlerFunc {
 		c.JSON(http.StatusOK, rowDeleted)
 	}
 }
+
+func UpdateUser(conn *api.Api, txOpts *bind.TransactOpts) gin.HandlerFunc {
+	return func(c *gin.Context) {
+		addrString := c.Params.ByName("address")
+		hexAddr := common.HexToAddress(addrString)
+
+		var data model.EmployeeUpdate
+
+		if err := c.ShouldBind(&data); err != nil {
+			c.JSON(http.StatusBadRequest, model.ErrInternalServerError)
+			panic(err)
+		}
+
+		if !data.UserTime.IsZero() || data.UserEmail != "" {
+			solData := model.MapToUpdateSolData(data)
+
+			repo := repository.NewRecordRepo(conn)
+			updateBiz := biz.NewCreateBiz(repo)
+
+			isSuccess, err := updateBiz.UpdateUser(c.Request.Context(), txOpts, hexAddr, solData)
+			if err != nil {
+				panic(err)
+			}
+
+			c.JSON(http.StatusOK, isSuccess)
+		}
+
+		c.JSON(http.StatusBadRequest, model.ErrBadParamInput)
+	}
+}

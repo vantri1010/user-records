@@ -39,10 +39,13 @@ func main() {
 
 	router.POST("/create", routers.CreateRecord(contractInstance, txOpts))
 	router.GET("/getuserbyaddr/:address", routers.GetUser(contractInstance, options))
+	router.GET("/checkaddr/:address", routers.CheckAddr(contractInstance, options))
 	router.GET("/getaddressbyid/:index", routers.GetAddress(contractInstance, options))
 	router.GET("/getuserbyid/:index", routers.GetUserByID(contractInstance, options))
 	router.GET("/listusers", routers.ListUsers(contractInstance, options))
+	router.GET("/countusers", routers.CountUsers(contractInstance, options))
 	router.DELETE("/deleteuserbyaddr/:address", routers.DeleteRecord(contractInstance, txOpts))
+	router.PUT("/updateuser/:address", routers.UpdateUser(contractInstance, txOpts))
 
 	router.Run()
 }
